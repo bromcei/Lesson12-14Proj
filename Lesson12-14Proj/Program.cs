@@ -2,11 +2,18 @@
 
 using Lesson12_14Proj.Repositories;
 using Lesson12_14Proj.Service;
-
+using Lesson12_14Proj.Simuliation;
+/*
 GateChecker gateCheck = new GateChecker(new WorkerRepository(), new GateRepository(), new WorkersInWorkPlaceRepository());
 
 gateCheck.GateCheckEvent(1, 1, DateTime.Now);
+*/
 
+
+GateChecker gateCheck = new GateChecker(new WorkerRepository(), new GateRepository(), new WorkersInWorkPlaceRepository());
+SimuliationService sim = new SimuliationService(gateCheck, "2022-10-06", "2022-10-08");
+
+sim.SimulationStart();
 
 /*
 

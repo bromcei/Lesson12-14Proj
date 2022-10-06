@@ -26,11 +26,18 @@ namespace Lesson12_14Proj.Service
             EventLogFilePath = @"C:\Users\tomas.ceida\source\repos\Lesson12-14Proj\Lesson12-14Proj\Data\EventLog.txt";
         }
 
-        public void GateCheckEvent(int workerID, int gateID, DateTime eventTime)
+        public void WorkersInWorkPlacerefresh() 
+        {
+            WorkersInWorkPlace = new WorkersInWorkPlaceRepository();
+        }
+        public bool GateCheckEvent(int workerID, int gateID, DateTime eventTime)
         {
             string eventName;
             string eventString;
             string workPlaceEntranceString;
+            WorkersInWorkPlacerefresh();
+            List<string> workerInWorkPlaceNewList = new List<string>();
+            string stringToRemove;
             Console.WriteLine($"Worker ID: {workerID}, Name: {Workers.GetWorker(workerID).WorkerName}, Access gate: {Workers.GetWorker(workerID).GateNumber}");
             Console.WriteLine($"Trying to access gate No: {gateID}");
             if (WorkersInWorkPlace.WorkersInWorkPlaceDict.ContainsKey(workerID))
@@ -53,19 +60,36 @@ namespace Lesson12_14Proj.Service
                 //EventList.Add(new Event(workerID, line.Split(";")[1], eventTime, gateiD, entranceID));
                 eventString = $"{workerID};{eventName};{eventTime};{gateID};{EntranceID};";
                 workPlaceEntranceString = $"{workerID};{EntranceID};";
+               
                 File.AppendAllText(EventLogFilePath, eventString + Environment.NewLine);
                 File.AppendAllText(WorkersInWorkPlace.WorkersInWorkPlacetxtPath, workPlaceEntranceString + Environment.NewLine);
                 File.AppendAllText(WorkersInWorkPlace.EntranceIDstxtPath, $"{EntranceID}" + Environment.NewLine);
                 Console.WriteLine($"New Event: {eventString}");
+                return true;
+
             }
             else if (eventName == "Exit")
             {
                 EntranceID = WorkersInWorkPlace.WorkersInWorkPlaceDict[workerID];
                 eventString = $"{workerID};{eventName};{eventTime};{gateID};{EntranceID};";
-                File.AppendAllText(EventLogFilePath, eventString);
-                File.WriteAllLines(WorkersInWorkPlace.EntranceIDstxtPath,
-                File.ReadLines(WorkersInWorkPlace.EntranceIDstxtPath).Where(l => l != $"{workerID};{EntranceID};").ToList());
+                File.AppendAllText(EventLogFilePath, eventString + Environment.NewLine);
+                
+                stringToRemove = $"{workerID};{EntranceID};";
+
+                foreach (string line in File.ReadAllLines(WorkersInWorkPlace.WorkersInWorkPlacetxtPath))
+                {
+                    if (stringToRemove != line)
+                    {
+                        workerInWorkPlaceNewList.Add(line);
+                    }
+                }
+                File.WriteAllText(WorkersInWorkPlace.WorkersInWorkPlacetxtPath, String.Empty);
+                foreach (string line in workerInWorkPlaceNewList)
+                {
+                    File.AppendAllText(WorkersInWorkPlace.WorkersInWorkPlacetxtPath, line + Environment.NewLine);
+                }
                 Console.WriteLine($"New Event: {eventString}");
+                return true;
 
             }
             else if (eventName == "Access Denied")
@@ -73,8 +97,13 @@ namespace Lesson12_14Proj.Service
                 eventString = $"{workerID};{eventName};{eventTime};{gateID};-1";
                 File.AppendAllText(EventLogFilePath, eventString + Environment.NewLine);
                 Console.WriteLine($"New Event: {eventString}");
-            }
 
+                return false;
+            }
+            else
+            {
+                return false;
+            }
 
 
         }
