@@ -11,7 +11,7 @@ gateCheck.GateCheckEvent(1, 1, DateTime.Now);
 
 
 GateChecker gateCheck = new GateChecker(new WorkerRepository(), new GateRepository(), new WorkersInWorkPlaceRepository());
-SimuliationService sim = new SimuliationService(gateCheck, "2022-10-06", "2022-10-08");
+SimuliationService sim = new SimuliationService(gateCheck, "2022-10-06", "2023-10-05");
 
 sim.SimulationStart();
 

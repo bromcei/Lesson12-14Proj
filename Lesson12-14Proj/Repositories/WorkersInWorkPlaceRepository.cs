@@ -25,7 +25,6 @@ namespace Lesson12_14Proj.Repositories
             {
                 foreach (string line in File.ReadAllLines(WorkersInWorkPlacetxtPath))
                 {
-                    Console.WriteLine(line.Split(";"));
                     if (int.TryParse(line.Split(";")[0], out workerID) && int.TryParse(line.Split(";")[1], out workPlaceEntranceID))
                     {
                         WorkersInWorkPlaceDict.Add(workerID, workPlaceEntranceID);
