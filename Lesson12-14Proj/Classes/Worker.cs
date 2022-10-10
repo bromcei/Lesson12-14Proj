@@ -12,13 +12,15 @@ namespace Lesson12_14Proj.Classes
         public string WorkerName { get; set; }  
         public int GateNumber { get; set; }
         bool IsActive { get; set; }
+        public decimal HourlyRate { get; set; }
 
-        public Worker(int workerID, string workerName, int gateNumber, bool isActive)
+        public Worker(int workerID, string workerName, int gateNumber, bool isActive, decimal hourlyRate)
         {
             WorkerID = workerID;
             WorkerName = workerName;
             GateNumber = gateNumber;
             IsActive = isActive;
+            HourlyRate = hourlyRate;
         }
 
         public void ChangeGate(int newgateNumber)

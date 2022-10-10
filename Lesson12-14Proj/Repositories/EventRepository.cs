@@ -44,5 +44,9 @@ namespace Lesson12_14Proj.Repositories
         {
             EventList.Add(new Event(workerID, eventName, eventTime, gateiD, entranceID));
         }
+        public void OrderEventsByDate()
+        {
+            EventList.OrderBy(evn => evn.EntranceID).ThenBy(evn => evn.EventTime);
+        }
     }
 }

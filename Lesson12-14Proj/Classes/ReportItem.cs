@@ -8,22 +8,24 @@ namespace Lesson12_14Proj.Classes
 {
     public class ReportItem
     {
+        public int EmployeeID { get; set; }
+        public string YYYY_MM { get; set; }
+        public int EntranceID { get; set; }
+        public DateTime EntranceDate { get; set; }
+        public DateTime ExitDate { get; set; }
 
-        string EmployeeName { get; set; }
-        string MonthName { get; set; }  
-        int NoOfDaysWorked { get; set; }
-        decimal HoursWorked { get; set; }
-        decimal HourlyRate { get; set; }
-        decimal Salary { get; set; }
+        public double WorkHours { get; set; }
 
-        public ReportItem (string employeeName, string monthName, int noOfDaysWorked, decimal hoursWorked, decimal hourlyRate, decimal salary)
+       public ReportItem(int employeeID, int entranceID, DateTime entranceDate, DateTime exitDate)
         {
-            EmployeeName = employeeName;
-            MonthName = monthName;
-            NoOfDaysWorked = noOfDaysWorked;
-            HoursWorked = hoursWorked;
-            HourlyRate = hourlyRate;
-            Salary = salary;
+            EmployeeID = employeeID;
+            EntranceID = entranceID;
+            EntranceDate = entranceDate;
+            ExitDate = exitDate;
+            YYYY_MM = ExitDate.ToString("yyyy-MM");
+            WorkHours = (ExitDate - EntranceDate).TotalHours;
         }
+
+
     }
 }
