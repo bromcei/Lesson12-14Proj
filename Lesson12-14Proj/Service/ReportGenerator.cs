@@ -46,19 +46,71 @@ namespace Lesson12_14Proj.Service
             List<string> uniquePeriods = workerData.Select(e => e.YYYY_MM).Distinct().ToList();
             List<string> reportStringList = new List<string>();
             reportStringList.Add("yyyy-mm;WorkerName;NoOfDays;TotalHours;Salary;");
-            string WorkerName;
+            string WorkerName = Workers.GetWorker(workerID).WorkerName;
             int NoOfDays;
             double TotalHours;
             decimal Salary;
+            DateTime currDate = DateTime.Now;
+            string HTMLPath = $@"C:\Users\tomas.ceida\source\repos\Lesson12-14Proj\Lesson12-14Proj\Reports\Report_Worker_{workerID}_{currDate.ToString("yyyy'-'MM'-'dd'T'HH'_'mm'_'ss")}.html";
+
+            string HTMLUpperPart = $@"
+                <!DOCTYPE html>
+                <html>
+                <body>
+                <h1>Worker {WorkerName} Report {currDate.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss")} </h1>
+                <table>
+                  <tr>
+                    <th>Date</th>
+                    <th>WorkerName</th>
+                    <th>NoOfDays</th>
+                    <th>TotalHours</th>
+                    <th>Salary</th>
+                  </tr>
+                        ";
+
+
+            string HTMLLowerPart = @"
+                </table>
+                </body>
+                </html>
+                ";
+            string HTMLTable = "";
+
             foreach (string periodName in uniquePeriods)
             {
-                WorkerName = Workers.GetWorker(workerID).WorkerName;
                 NoOfDays = workerData.Where(evn => evn.YYYY_MM == periodName).ToList().Count();
                 TotalHours = workerData.Where(evn => evn.YYYY_MM == periodName).Sum(evn => evn.WorkHours);
                 Salary = (decimal)TotalHours * Workers.GetWorker(workerID).HourlyRate;
-                Console.WriteLine($"{periodName};{WorkerName};{NoOfDays};{TotalHours};{Salary};");
+                HTMLTable += $@"
+                <tr>
+                <td>{periodName}</td>
+                <td>{WorkerName}</td>
+                <td>{NoOfDays}</td>
+                <td>{Math.Round(TotalHours, 2)}</td>
+                <td>{Math.Round(Salary, 2)}</td>
+                </tr>
+                ";
             }
+            System.IO.File.WriteAllText(HTMLPath, HTMLUpperPart + HTMLTable + HTMLLowerPart);
 
         }
+        
+        public void GenerateAllReports()
+        {
+            foreach (Worker worker in Workers.WorkerList)
+            {
+                GenerateWorkerReport(worker.WorkerID);
+            }
+        }
+
+        public void DeleteAllReports()
+        {
+            DirectoryInfo DirectoryObj = new DirectoryInfo("C:\\Users\\tomas.ceida\\source\\repos\\Lesson12-14Proj\\Lesson12-14Proj\\Reports\\");
+            foreach (FileInfo file in DirectoryObj.EnumerateFiles())
+            {
+                file.Delete();
+            }
+        }
+
     }
 }

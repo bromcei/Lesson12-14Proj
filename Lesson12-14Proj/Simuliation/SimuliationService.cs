@@ -34,6 +34,12 @@ namespace Lesson12_14Proj.Simuliation
             
 
         }
+        public void ClearEventsData()
+        {
+            File.WriteAllText(GateService.EventLogFilePath, string.Empty);
+            File.WriteAllText(WorkersInWorkPlace.EntranceIDstxtPath, string.Empty);
+            File.WriteAllText(WorkersInWorkPlace.WorkersInWorkPlacetxtPath, string.Empty);
+        }
         public void SimulationStart()
         {
             List<Worker> workerListToStartWork = new List<Worker>();
