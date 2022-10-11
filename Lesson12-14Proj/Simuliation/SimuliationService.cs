@@ -25,7 +25,7 @@ namespace Lesson12_14Proj.Simuliation
             Workers = GateService.Workers;
             WorkersInWorkPlace = GateService.WorkersInWorkPlace;
             SimDateList = new List<DateTime>();
-            for (var dt = DateTime.Parse(startDate); dt <= DateTime.Parse(endDate); dt = dt.AddDays(1))
+            for (DateTime dt = DateTime.Parse(startDate); dt <= DateTime.Parse(endDate); dt = dt.AddDays(1))
             {
                 SimDateList.Add(dt);
             }
