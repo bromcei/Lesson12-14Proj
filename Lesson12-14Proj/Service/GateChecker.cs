@@ -51,7 +51,7 @@ namespace Lesson12_14Proj.Service
             }
             else
             {
-                eventName = "Access Denied";
+                eventName = "Access_Denied";
             }
 
             if (eventName == "Entrance")

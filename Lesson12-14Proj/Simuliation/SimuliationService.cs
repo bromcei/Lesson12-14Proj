@@ -59,13 +59,14 @@ namespace Lesson12_14Proj.Simuliation
                     succesExit = false;
                     PosibleWorkerGates = new List<int>(){ worker.GateNumber, worker.GateNumber, worker.GateNumber, new Random().Next(4) };
                     //list[random.Next(list.Count)];
-
+                    eventTimeStr = $"{simDate.ToString("yyyy-MM-dd")} {SimStartHoursRange[random.Next(SimStartHoursRange.Count)]}:{random.Next(60)}";
+                    eventTime = DateTime.Parse(eventTimeStr);
 
                     while (succesExit == false)
                     {
-                        eventTimeStr = $"{simDate.ToString("yyyy-MM-dd")} {SimStartHoursRange[random.Next(SimStartHoursRange.Count)]}:{random.Next(60)}";
-                        eventTime = DateTime.Parse(eventTimeStr);
+                        
                         succesExit = GateService.GateCheckEvent(worker.WorkerID, PosibleWorkerGates[random.Next(PosibleWorkerGates.Count)], eventTime);
+                        eventTime = eventTime.AddMinutes(random.Next(10));
                     }
 
                 }
@@ -78,12 +79,12 @@ namespace Lesson12_14Proj.Simuliation
                     succesExit = false;
                     PosibleWorkerGates = new List<int>() { worker.GateNumber, worker.GateNumber, worker.GateNumber, new Random().Next(4) };
                     //list[random.Next(list.Count)];
-
+                    eventTimeStr = $"{simDate.ToString("yyyy-MM-dd")} {SimEndHoursRange[random.Next(SimStartHoursRange.Count)]}:{random.Next(60)}";
+                    eventTime = DateTime.Parse(eventTimeStr);
                     while (succesExit == false)
                     {                        
-                        eventTimeStr = $"{simDate.ToString("yyyy-MM-dd")} {SimEndHoursRange[random.Next(SimStartHoursRange.Count)]}:{random.Next(60)}";
-                        eventTime = DateTime.Parse(eventTimeStr);
                         succesExit = GateService.GateCheckEvent(worker.WorkerID, PosibleWorkerGates[random.Next(PosibleWorkerGates.Count)], eventTime);
+                        eventTime = eventTime.AddMinutes(random.Next(10));
                     }
 
                 }
