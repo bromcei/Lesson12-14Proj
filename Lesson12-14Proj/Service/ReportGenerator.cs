@@ -14,17 +14,19 @@ namespace Lesson12_14Proj.Service
         public WorkerRepository Workers {get; set;}
         public EventRepository EventsLogs { get; set;}
         public List<ReportItem> ReportsData { get; set;}
+        public List<ReportItem> ReportDataUnauthEvents { get; set;}
 
         public ReportGenerator(WorkerRepository workers, EventRepository eventsLogs)
         {
             Workers = workers;
             EventsLogs = eventsLogs;
             ReportsData = new List<ReportItem>();
+            ReportDataUnauthEvents = new List<ReportItem>();
             EventsLogs.OrderEventsByDate();
             List<int> eventIDsList = new List<int>();
             foreach (Event eventItem in EventsLogs.EventList)
             {
-                if (!eventIDsList.Contains(eventItem.EntranceID) && eventItem.EntranceID != -1)
+                if (!eventIDsList.Contains(eventItem.EntranceID))
                 {
                     eventIDsList.Add(eventItem.EntranceID);
                     ReportsData.Add(
@@ -36,7 +38,6 @@ namespace Lesson12_14Proj.Service
                                 )
                         );
                 }
-
             }
         }
 
@@ -48,6 +49,9 @@ namespace Lesson12_14Proj.Service
             reportStringList.Add("yyyy-mm;WorkerName;NoOfDays;TotalHours;Salary;");
             string WorkerName = Workers.GetWorker(workerID).WorkerName;
             int NoOfDays;
+            int TotalEvents;
+            int UnauthEvents;
+            double UnauthEventsRatio;
             double TotalHours;
             decimal Salary;
             DateTime currDate = DateTime.Now;
@@ -63,10 +67,10 @@ namespace Lesson12_14Proj.Service
                     <th>Date</th>
                     <th>WorkerName</th>
                     <th>NoOfDays</th>
+                    <th>UnAuthEventsRatio</th>
                     <th>TotalHours</th>
                     <th>Salary</th>
-                  </tr>
-                        ";
+                  </tr>";
 
 
             string HTMLLowerPart = @"
@@ -78,14 +82,28 @@ namespace Lesson12_14Proj.Service
 
             foreach (string periodName in uniquePeriods)
             {
-                NoOfDays = workerData.Where(evn => evn.YYYY_MM == periodName).ToList().Count();
+                NoOfDays = workerData.Where(evn => evn.YYYY_MM == periodName && evn.EntranceID != -1).ToList().Count();             
+                UnauthEvents = workerData.Where(evn => evn.YYYY_MM == periodName && evn.EntranceID == -1).ToList().Count();
+                
+                
+                TotalEvents = (NoOfDays * 2) + UnauthEvents;
+                if (TotalEvents != 0)
+                {
+                    UnauthEventsRatio = (double)UnauthEvents / (double)TotalEvents;
+                }
+                else
+                {
+                    UnauthEventsRatio = 0;
+                }
+                UnauthEventsRatio = 
                 TotalHours = workerData.Where(evn => evn.YYYY_MM == periodName).Sum(evn => evn.WorkHours);
-                Salary = (decimal)TotalHours * Workers.GetWorker(workerID).HourlyRate;
+                Salary = (decimal)TotalHours * (decimal)Workers.GetWorker(workerID).HourlyRate;
                 HTMLTable += $@"
                 <tr>
                 <td>{periodName}</td>
                 <td>{WorkerName}</td>
                 <td>{NoOfDays}</td>
+                <td>{Math.Round(UnauthEventsRatio, 2)} % </td>
                 <td>{Math.Round(TotalHours, 2)}</td>
                 <td>{Math.Round(Salary, 2)}</td>
                 </tr>

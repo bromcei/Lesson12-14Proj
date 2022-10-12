@@ -31,8 +31,6 @@ namespace Lesson12_14Proj.Simuliation
             }
             SimStartHoursRange = new List<int> { 7, 8, 9, 10 };
             SimEndHoursRange = new List<int> { 15, 16, 17, 18 };
-            
-
         }
         public void ClearEventsData()
         {
@@ -52,7 +50,7 @@ namespace Lesson12_14Proj.Simuliation
             foreach (DateTime simDate in SimDateList)
             {
                 //Workers entrance simuliation
-                workerListToStartWork = Workers.WorkerList.OrderBy(arg => Guid.NewGuid()).Take(4).ToList();
+                workerListToStartWork = Workers.WorkerList.OrderBy(arg => Guid.NewGuid()).Take(random.Next(8)).ToList();
 
                 foreach (Worker worker in workerListToStartWork)
                 {
@@ -63,8 +61,7 @@ namespace Lesson12_14Proj.Simuliation
                     eventTime = DateTime.Parse(eventTimeStr);
 
                     while (succesExit == false)
-                    {
-                        
+                    {               
                         succesExit = GateService.GateCheckEvent(worker.WorkerID, PosibleWorkerGates[random.Next(PosibleWorkerGates.Count)], eventTime);
                         eventTime = eventTime.AddMinutes(random.Next(10));
                     }
